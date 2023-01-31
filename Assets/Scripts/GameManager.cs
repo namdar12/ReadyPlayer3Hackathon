@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     private float SpawnRate = 1;
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI gameOverText;
-    private int score = 0;
+    public int score = 0;
     public int pointValue;
 
 

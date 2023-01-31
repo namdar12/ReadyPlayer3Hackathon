@@ -1,17 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using Thirdweb;
+
+
+
 
 public class Target : MonoBehaviour
 {
     //Variables
     private Rigidbody targetRb;
     private GameManager gameManager;
+
+    public ThirdwebSDKDemos thirdweb;
     private float minSpeed =12;
     private float maxSpeed=16;
     private float maxTorque = 10;
     private float xRange = 4;
     private float ySpawnPos = -6;
+
+    private int lossCounter = 0;
+
     public int pointValue;
     public ParticleSystem explosionParticle;
 
@@ -43,16 +53,18 @@ public class Target : MonoBehaviour
         Instantiate(explosionParticle,transform.position,explosionParticle.transform.rotation);
     }
 
-    // private void OnTriggerEnter(Collider other)
-    // {
-    //     Destroy(gameObject);
-        
-    // }
-      private void OnTriggerEnter(Collider other){
-        //frnj Destroy(gameObject);
+    private void OnTriggerEnter(Collider other){
         if(!gameObject.CompareTag("Bad1")){
-            gameManager.GameOver();
+            lossCounter +=1;
+            if(lossCounter>=3){
+                gameManager.GameOver();
+                //yield return new WaitForSeconds(5);
+                thirdweb.UpdateScore(gameManager.score.ToString());
+                //SceneManager.LoadScene(0);
+            }
         }
     }
+
+
 
 }

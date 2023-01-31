@@ -7,7 +7,6 @@ using UnityEngine.SceneManagement;
 
 
 
-
 public class ThirdwebSDKDemos : MonoBehaviour
 {
     private ThirdwebSDK sdk;
@@ -198,9 +197,9 @@ public class ThirdwebSDKDemos : MonoBehaviour
         }
     }
 
-    public async void UpdateScore(){
+    public async void UpdateScore(string score){
         var contract = sdk.GetContract(deployedAt, ABI); 
-        var result = await contract.Write("updateScore","23");
+        var result = await contract.Write("updateScore",score);
         
         if (result.isSuccessful())
         {
