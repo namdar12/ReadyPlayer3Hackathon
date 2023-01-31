@@ -3,6 +3,9 @@ using Thirdweb;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using System;
+using UnityEngine.SceneManagement;
+
+
 
 
 public class ThirdwebSDKDemos : MonoBehaviour
@@ -25,6 +28,7 @@ public class ThirdwebSDKDemos : MonoBehaviour
     private string deployedAt = "0xfFcbD5905570Fa810cDc63bb891678B7Ce0c0744";
     
     private string ABI = "[{\"inputs\": [],\"name\": \"claimPrize\",\"outputs\": [],\"stateMutability\": \"nonpayable\",\"type\": \"function\"},{\"inputs\": [],\"name\": \"registerPlayer\",\"outputs\": [],\"stateMutability\": \"payable\",\"type\": \"function\"},{\"inputs\": [{\"internalType\": \"uint256\",\"name\": \"_score\",\"type\": \"uint256\"}],\"name\": \"updateScore\",\"outputs\": [],\"stateMutability\": \"nonpayable\",\"type\":\"function\"},{\"inputs\": [],\"name\": \"deadline\",\"outputs\": [{\"internalType\": \"uint256\",\"name\": \"\",\"type\": \"uint256\"}],\"stateMutability\": \"view\",\"type\": \"function\"},{\"inputs\": [],\"name\": \"hello\",\"outputs\": [{\"internalType\": \"string\",\"name\": \"\",\"type\": \"string\"}],\"stateMutability\": \"pure\",\"type\": \"function\"},{\"inputs\": [{\"internalType\": \"address\",\"name\": \"\",\"type\": \"address\"}],\"name\": \"isPlayer\",\"outputs\": [{\"internalType\": \"bool\",\"name\": \"\",\"type\": \"bool\"}],\"stateMutability\": \"view\",\"type\": \"function\"},{\"inputs\": [{\"internalType\": \"address\",\"name\": \"\",\"type\": \"address\"}],\"name\": \"scores\",\"outputs\": [{\"internalType\": \"uint256\",\"name\": \"\",\"type\": \"uint256\"}],\"stateMutability\": \"view\",\"type\": \"function\"},{\"inputs\": [],\"name\": \"winner\",\"outputs\": [{\"internalType\": \"address\",\"name\": \"\",\"type\": \"address\"}],\"stateMutability\": \"view\",\"type\": \"function\"}]";
+
 
     void Start()
     {
@@ -177,15 +181,16 @@ public class ThirdwebSDKDemos : MonoBehaviour
 
     public async void RegisterPlayer(){
         var contract = sdk.GetContract(deployedAt, ABI); 
-        //var result = await contract.Write("registerPlayer");
-        // custom write with transaction overrides
+        //custom write with transaction overrides
         var result = await contract.Write("registerPlayer", new TransactionRequest
         {
              value = "0.1".ToWei() // 0.1 ETH
         });
         if (result.isSuccessful())
         {
+        SceneManager.LoadScene(1);
         resultText.text = "You are playing!";
+
         }
         else
         {
