@@ -2,6 +2,8 @@ using UnityEngine;
 using Thirdweb;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using System;
+
 
 public class ThirdwebSDKDemos : MonoBehaviour
 {
@@ -10,7 +12,19 @@ public class ThirdwebSDKDemos : MonoBehaviour
     public Text walletInfotext;
     public GameObject connectButtonsContainer;
     public GameObject walletInfoContainer;
+
+    public GameObject playButton;
+
     public Text resultText;
+    public Text bountyText;
+    public Text winnerText;
+    public Text scoreText;
+    public Text dateText;
+
+
+    private string deployedAt = "0xfFcbD5905570Fa810cDc63bb891678B7Ce0c0744";
+    
+    private string ABI = "[{\"inputs\": [],\"name\": \"claimPrize\",\"outputs\": [],\"stateMutability\": \"nonpayable\",\"type\": \"function\"},{\"inputs\": [],\"name\": \"registerPlayer\",\"outputs\": [],\"stateMutability\": \"payable\",\"type\": \"function\"},{\"inputs\": [{\"internalType\": \"uint256\",\"name\": \"_score\",\"type\": \"uint256\"}],\"name\": \"updateScore\",\"outputs\": [],\"stateMutability\": \"nonpayable\",\"type\":\"function\"},{\"inputs\": [],\"name\": \"deadline\",\"outputs\": [{\"internalType\": \"uint256\",\"name\": \"\",\"type\": \"uint256\"}],\"stateMutability\": \"view\",\"type\": \"function\"},{\"inputs\": [],\"name\": \"hello\",\"outputs\": [{\"internalType\": \"string\",\"name\": \"\",\"type\": \"string\"}],\"stateMutability\": \"pure\",\"type\": \"function\"},{\"inputs\": [{\"internalType\": \"address\",\"name\": \"\",\"type\": \"address\"}],\"name\": \"isPlayer\",\"outputs\": [{\"internalType\": \"bool\",\"name\": \"\",\"type\": \"bool\"}],\"stateMutability\": \"view\",\"type\": \"function\"},{\"inputs\": [{\"internalType\": \"address\",\"name\": \"\",\"type\": \"address\"}],\"name\": \"scores\",\"outputs\": [{\"internalType\": \"uint256\",\"name\": \"\",\"type\": \"uint256\"}],\"stateMutability\": \"view\",\"type\": \"function\"},{\"inputs\": [],\"name\": \"winner\",\"outputs\": [{\"internalType\": \"address\",\"name\": \"\",\"type\": \"address\"}],\"stateMutability\": \"view\",\"type\": \"function\"}]";
 
     void Start()
     {
@@ -22,6 +36,7 @@ public class ThirdwebSDKDemos : MonoBehaviour
     {
         connectButtonsContainer.SetActive(true);
         walletInfoContainer.SetActive(false);
+        playButton.SetActive(false);
     }
 
     void Update()
@@ -65,6 +80,15 @@ public class ThirdwebSDKDemos : MonoBehaviour
         await sdk.wallet.Disconnect();
         connectButtonsContainer.SetActive(true);
         walletInfoContainer.SetActive(false);
+
+        bountyText.text = "Bounty: ...";
+        winnerText.text = "Winner: ...";
+        scoreText.text = "Max score: ...";
+        dateText.text = "Due date: ...";
+
+        playButton.SetActive(false);
+
+
     }
 
     private async void ConnectWallet(WalletProvider provider)
@@ -80,6 +104,10 @@ public class ThirdwebSDKDemos : MonoBehaviour
                 chainId = 5 // Switch the wallet Goerli on connection
             });
             walletInfotext.text = "Connected as: " + address;
+
+            FetchData();
+            playButton.SetActive(true);
+
         }
         catch (System.Exception e)
         {
@@ -105,6 +133,131 @@ public class ThirdwebSDKDemos : MonoBehaviour
         catch (System.Exception e)
         {
             resultText.text = "Auth Error: " + e.Message;
+        }
+    }
+    
+    public async void GetTest(){
+        var contract = sdk.GetContract(deployedAt, ABI); 
+        var test = await contract.Read<string>("hello");
+        resultText.text = test;
+    }
+
+    public async void FetchData(){
+        GetDate();
+        GetWinnerAndScore();
+        GetContractBalance();
+    }
+
+    public async void GetWinnerAndScore(){
+        winnerText.text = "Loading...";
+        scoreText.text = "Loading...";
+
+        var contract = sdk.GetContract(deployedAt, ABI); 
+        var winner = await contract.Read<string>("winner");
+        winnerText.text = "Winner: " + winner;
+
+        var score = await contract.Read<string>("scores", winner);
+        scoreText.text = "Max score: "+score;
+    }
+
+    public async void GetDate(){
+
+        dateText.text = "Loading...";
+
+        var contract = sdk.GetContract(deployedAt, ABI); 
+        var date = await contract.Read<string>("deadline");
+        double doubleDate = Convert.ToDouble(date);
+
+        DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+    	dateTime = dateTime.AddSeconds( doubleDate ).ToLocalTime();
+
+        dateText.text = "Due date: " + dateTime + " UTC";
+    }
+
+
+    public async void RegisterPlayer(){
+        var contract = sdk.GetContract(deployedAt, ABI); 
+        //var result = await contract.Write("registerPlayer");
+        // custom write with transaction overrides
+        var result = await contract.Write("registerPlayer", new TransactionRequest
+        {
+             value = "0.1".ToWei() // 0.1 ETH
+        });
+        if (result.isSuccessful())
+        {
+        resultText.text = "You are playing!";
+        }
+        else
+        {
+        resultText.text = "ERROR: NOT PLAYING!";
+        }
+    }
+
+    public async void UpdateScore(){
+        var contract = sdk.GetContract(deployedAt, ABI); 
+        var result = await contract.Write("updateScore","23");
+        
+        if (result.isSuccessful())
+        {
+        resultText.text = "Update Succesfull";
+        }
+        else
+        {
+        resultText.text = "ERROR: NOT UPDATED";
+        }
+    }
+
+    public async void ClaimPrize(){
+        var contract = sdk.GetContract(deployedAt, ABI); 
+        var result = await contract.Write("claimPrize");
+        
+        if (result.isSuccessful())
+        {
+        resultText.text = "Prize claimed, congrats!";
+        }
+        else
+        {
+        resultText.text = "ERROR: NOT CLAIMED";
+        }
+    }
+
+    public async void GetContractBalance()
+    {
+        bountyText.text = "Loading...";
+        var contract = sdk.GetContract(deployedAt, ABI); 
+
+        try
+        {
+            CurrencyValue balance = await contract.GetBalance();
+            bountyText.text = "Bounty: " + balance.displayValue + " ETH";
+        }
+        catch (System.Exception e)
+        {
+            bountyText.text = "Error calling contract (see console): " + e.Message;
+        } 
+    }
+
+    public async void CustomContract()
+    {
+        var contract = sdk.GetContract("0x62Cf5485B6C24b707E47C5E0FB2EAe7EbE18EC4c");
+        try
+        {
+            // custom read
+            resultText.text = "Fetching contract data...";
+            var result = await contract.Read<string>("uri", 0);
+            resultText.text = "Read custom token uri: " + result;
+            // custom write
+            await contract.Write("claimKitten");
+            // custom write with transaction overrides
+            // await contract.Write("claim", new TransactionRequest
+            // {
+            //     value = "0.05".ToWei() // 0.05 ETH
+            // }, "0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803", 0, 1);
+            resultText.text = "Custom contraact call successful";
+        }
+        catch (System.Exception e)
+        {
+            resultText.text = "Error calling contract (see console): " + e.Message;
         }
     }
 
@@ -299,27 +452,5 @@ public class ThirdwebSDKDemos : MonoBehaviour
         }
     }
 
-    public async void CustomContract()
-    {
-        var contract = sdk.GetContract("0x62Cf5485B6C24b707E47C5E0FB2EAe7EbE18EC4c");
-        try
-        {
-            // custom read
-            resultText.text = "Fetching contract data...";
-            var result = await contract.Read<string>("uri", 0);
-            resultText.text = "Read custom token uri: " + result;
-            // custom write
-            await contract.Write("claimKitten");
-            // custom write with transaction overrides
-            // await contract.Write("claim", new TransactionRequest
-            // {
-            //     value = "0.05".ToWei() // 0.05 ETH
-            // }, "0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803", 0, 1);
-            resultText.text = "Custom contraact call successful";
-        }
-        catch (System.Exception e)
-        {
-            resultText.text = "Error calling contract (see console): " + e.Message;
-        }
-    }
+    
 }
