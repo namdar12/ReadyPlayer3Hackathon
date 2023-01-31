@@ -13,6 +13,7 @@ public class Target : MonoBehaviour
     private float xRange = 4;
     private float ySpawnPos = -6;
     public int pointValue;
+    public ParticleSystem explosionParticle;
 
 
 
@@ -39,6 +40,7 @@ public class Target : MonoBehaviour
 
         Destroy(gameObject);
         gameManager.UpdateScore(pointValue);
+        Instantiate(explosionParticle,transform.position,explosionParticle.transform.rotation);
     }
 
     // private void OnTriggerEnter(Collider other)
@@ -46,5 +48,11 @@ public class Target : MonoBehaviour
     //     Destroy(gameObject);
         
     // }
+      private void OnTriggerEnter(Collider other){
+        //frnj Destroy(gameObject);
+        if(!gameObject.CompareTag("Bad1")){
+            gameManager.GameOver();
+        }
+    }
 
 }
