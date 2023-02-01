@@ -2,10 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Thirdweb;
+
 
 
 public class GameManager : MonoBehaviour
 {
+    private ThirdwebSDK sdk;
+
 
     public List<GameObject> targets;
     private float SpawnRate = 1;
@@ -13,6 +17,9 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI gameOverText;
     public int score = 0;
     public int pointValue;
+    private ThirdwebSDKDemos thirdwebSDKDemos;
+    
+
 
 
 
@@ -20,8 +27,11 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        sdk = new ThirdwebSDK("goerli");
+
         StartCoroutine(SpawnTarget());
         UpdateScore(score);
+        thirdwebSDKDemos = GameObject.Find("Thirdweb").GetComponent<ThirdwebSDKDemos>();
     }
 
     // Update is called once per frame
@@ -47,6 +57,8 @@ public class GameManager : MonoBehaviour
 
     public void GameOver(){
         gameOverText.gameObject.SetActive(true);
+        thirdwebSDKDemos.UpdateScore(score.ToString());
+
 
     }
   
