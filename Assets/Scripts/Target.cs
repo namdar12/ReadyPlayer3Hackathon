@@ -59,7 +59,7 @@ public class Target : MonoBehaviour
             if(lossCounter>=3){
                 gameManager.GameOver();
                 //yield return new WaitForSeconds(5);
-                thirdweb.UpdateScore(gameManager.score.ToString());
+                lossCounter = 0;
                 //SceneManager.LoadScene(0);
             }
         }

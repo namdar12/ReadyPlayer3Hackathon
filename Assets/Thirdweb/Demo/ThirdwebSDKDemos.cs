@@ -197,10 +197,10 @@ public class ThirdwebSDKDemos : MonoBehaviour
         }
     }
 
-    public async void UpdateScore(string score){
-        MetamaskLogin();
+    public async void UpdateScore(){
+        
         var contract = sdk.GetContract(deployedAt, ABI); 
-        var result = await contract.Write("updateScore",score);
+        var result = await contract.Write("updateScore","50");
         
         if (result.isSuccessful())
         {
