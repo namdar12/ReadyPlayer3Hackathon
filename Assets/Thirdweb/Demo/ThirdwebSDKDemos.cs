@@ -230,16 +230,34 @@ public class ThirdwebSDKDemos : MonoBehaviour
     {
         bountyText.text = "Loading...";
         var contract = sdk.GetContract(deployedAt, ABI); 
+        
+        //var contract = sdk.GetContract("0x7649e0d153752c556b8b23DB1f1D3d42993E83a5"); // aWETH token in Goerli
+
 
         try
         {
-            CurrencyValue balance = await contract.GetBalance();
+            CurrencyValue balance = await contract.ERC20.BalanceOf(deployedAt);
             bountyText.text = "Bounty: " + balance.displayValue + " ETH";
         }
         catch (System.Exception e)
         {
             bountyText.text = "Error calling contract (see console): " + e.Message;
         } 
+    }
+
+    public async void GetERC20()
+    {
+        var contract = sdk.GetContract("0xB4870B21f80223696b68798a755478C86ce349bE"); // Token
+        resultText.text = "Fetching Token info";
+        Currency result = await contract.ERC20.Get();
+        CurrencyValue currencyValue = await contract.ERC20.TotalSupply();
+        resultText.text = result.name + " (" + currencyValue.displayValue + ")";
+        /*
+        // Address of the wallet to check token balance
+        var walletAddress = "{{wallet_address}}";
+        var balance = await contract.ERC20.BalanceOf(walletAddress);
+        */
+
     }
 
     public async void CustomContract()
@@ -309,14 +327,7 @@ public class ThirdwebSDKDemos : MonoBehaviour
 
     }
 
-    public async void GetERC20()
-    {
-        var contract = sdk.GetContract("0xB4870B21f80223696b68798a755478C86ce349bE"); // Token
-        resultText.text = "Fetching Token info";
-        Currency result = await contract.ERC20.Get();
-        CurrencyValue currencyValue = await contract.ERC20.TotalSupply();
-        resultText.text = result.name + " (" + currencyValue.displayValue + ")";
-    }
+    
 
     public async void MintERC721()
     {
