@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using System;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 
 
@@ -17,11 +18,14 @@ public class ThirdwebSDKDemos : MonoBehaviour
 
     public GameObject playButton;
 
+    public GameObject LoadingText;
+
     public Text resultText;
     public Text bountyText;
     public Text winnerText;
     public Text scoreText;
     public Text dateText;
+    
 
 
     private string deployedAt = "0xfFcbD5905570Fa810cDc63bb891678B7Ce0c0744";
@@ -40,10 +44,13 @@ public class ThirdwebSDKDemos : MonoBehaviour
         connectButtonsContainer.SetActive(true);
         walletInfoContainer.SetActive(false);
         playButton.SetActive(false);
+        LoadingText.SetActive(false);
+       
     }
 
     void Update()
     {
+     
     }
 
     public void MetamaskLogin()
@@ -81,6 +88,7 @@ public class ThirdwebSDKDemos : MonoBehaviour
     public async void DisconnectWallet()
     {
         await sdk.wallet.Disconnect();
+        LoadingText.SetActive(false);
         connectButtonsContainer.SetActive(true);
         walletInfoContainer.SetActive(false);
 
@@ -90,6 +98,7 @@ public class ThirdwebSDKDemos : MonoBehaviour
         dateText.text = "Due date: ...";
 
         playButton.SetActive(false);
+       
 
 
     }
@@ -128,6 +137,8 @@ public class ThirdwebSDKDemos : MonoBehaviour
     public async void OnSignClick()
     {
         resultText.text = "Signing...";
+        
+
         try
         {
             var data = await sdk.wallet.Authenticate("example.com");
@@ -185,11 +196,11 @@ public class ThirdwebSDKDemos : MonoBehaviour
         {
              value = "0.1".ToWei() // 0.1 ETH
         });
+        LoadingText.SetActive(true);
         if (result.isSuccessful())
         {
         SceneManager.LoadScene(1);
         resultText.text = "You are playing!";
-
         }
         else
         {
@@ -197,14 +208,15 @@ public class ThirdwebSDKDemos : MonoBehaviour
         }
     }
 
-    public async void UpdateScore(){
+    public async void UpdateScoreContract(){
         
         var contract = sdk.GetContract(deployedAt, ABI); 
-        var result = await contract.Write("updateScore","50");
+        var result = await contract.Write("updateScore",scoreText);
         
         if (result.isSuccessful())
         {
         resultText.text = "Update Succesfull";
+
         }
         else
         {

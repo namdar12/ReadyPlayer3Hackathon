@@ -24,19 +24,21 @@ public class Target : MonoBehaviour
 
     public int pointValue;
     public ParticleSystem explosionParticle;
+   
 
 
 
     // Start is called before the first frame update
     void Start()
     {
-
+     
         targetRb = GetComponent<Rigidbody>();
         targetRb.AddForce(Vector3.up * Random.Range(minSpeed,maxSpeed),ForceMode.Impulse);
         targetRb.AddTorque(Random.Range(-maxTorque,maxTorque),Random.Range(-maxTorque,maxTorque),
                             Random.Range(-maxTorque,maxTorque),ForceMode.Impulse);
         transform.position = new Vector3(Random.Range(-xRange,xRange),ySpawnPos);
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
+        
     }
 
     // Update is called once per frame
@@ -56,11 +58,9 @@ public class Target : MonoBehaviour
     private void OnTriggerEnter(Collider other){
         if(!gameObject.CompareTag("Bad1")){
             lossCounter +=1;
-            if(lossCounter>=3){
+            if(lossCounter == 3){
                 gameManager.GameOver();
-                //yield return new WaitForSeconds(5);
-                lossCounter = 0;
-                //SceneManager.LoadScene(0);
+
             }
         }
     }
