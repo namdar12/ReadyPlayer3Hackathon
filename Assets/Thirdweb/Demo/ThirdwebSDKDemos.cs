@@ -28,9 +28,13 @@ public class ThirdwebSDKDemos : MonoBehaviour
     
 
 
-    private string deployedAt = "0xfFcbD5905570Fa810cDc63bb891678B7Ce0c0744";
-    
+    private string deployedAt = "0x59511449De070F45C4154659eF5513A81190c090";
+    /*
     private string ABI = "[{\"inputs\": [],\"name\": \"claimPrize\",\"outputs\": [],\"stateMutability\": \"nonpayable\",\"type\": \"function\"},{\"inputs\": [],\"name\": \"registerPlayer\",\"outputs\": [],\"stateMutability\": \"payable\",\"type\": \"function\"},{\"inputs\": [{\"internalType\": \"uint256\",\"name\": \"_score\",\"type\": \"uint256\"}],\"name\": \"updateScore\",\"outputs\": [],\"stateMutability\": \"nonpayable\",\"type\":\"function\"},{\"inputs\": [],\"name\": \"deadline\",\"outputs\": [{\"internalType\": \"uint256\",\"name\": \"\",\"type\": \"uint256\"}],\"stateMutability\": \"view\",\"type\": \"function\"},{\"inputs\": [],\"name\": \"hello\",\"outputs\": [{\"internalType\": \"string\",\"name\": \"\",\"type\": \"string\"}],\"stateMutability\": \"pure\",\"type\": \"function\"},{\"inputs\": [{\"internalType\": \"address\",\"name\": \"\",\"type\": \"address\"}],\"name\": \"isPlayer\",\"outputs\": [{\"internalType\": \"bool\",\"name\": \"\",\"type\": \"bool\"}],\"stateMutability\": \"view\",\"type\": \"function\"},{\"inputs\": [{\"internalType\": \"address\",\"name\": \"\",\"type\": \"address\"}],\"name\": \"scores\",\"outputs\": [{\"internalType\": \"uint256\",\"name\": \"\",\"type\": \"uint256\"}],\"stateMutability\": \"view\",\"type\": \"function\"},{\"inputs\": [],\"name\": \"winner\",\"outputs\": [{\"internalType\": \"address\",\"name\": \"\",\"type\": \"address\"}],\"stateMutability\": \"view\",\"type\": \"function\"}]";
+    */
+
+    private string ABI = "[{\"inputs\":[],\"name\":\"claimPrize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"registerPlayer\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_gatewayAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_aTokenAddress\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_score\",\"type\":\"uint256\"}],\"name\":\"updateScore\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"aToken\",\"outputs\":[{\"internalType\":\"contractIERC20\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"deadline\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getBalance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"hello\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"isPlayer\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"scores\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"wethGateway\",\"outputs\":[{\"internalType\":\"contractIWETHGateway\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"winner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]";
+
 
 
     void Start()
@@ -190,13 +194,13 @@ public class ThirdwebSDKDemos : MonoBehaviour
 
 
     public async void RegisterPlayer(){
+        LoadingText.SetActive(true);
         var contract = sdk.GetContract(deployedAt, ABI); 
         //custom write with transaction overrides
         var result = await contract.Write("registerPlayer", new TransactionRequest
         {
              value = "0.1".ToWei() // 0.1 ETH
         });
-        LoadingText.SetActive(true);
         if (result.isSuccessful())
         {
         SceneManager.LoadScene(1);
@@ -245,8 +249,9 @@ public class ThirdwebSDKDemos : MonoBehaviour
 
         try
         {
-            CurrencyValue balance = await contract.GetBalance();
-            bountyText.text = "Bounty: " + balance.displayValue + " ETH";
+            var balance = await contract.Read<string>("getBalance");
+            //CurrencyValue balance = await contract.GetBalance();
+            bountyText.text = "Bounty: "+"0." + balance + " ETH";
         }
         catch (System.Exception e)
         {
