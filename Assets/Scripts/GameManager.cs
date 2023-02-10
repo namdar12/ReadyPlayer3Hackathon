@@ -97,6 +97,7 @@ public class GameManager : MonoBehaviour
             lossCounter +=1;
         }
         if (lossCounter == 3){
+            CancelInvoke("UpdateTime");
             GameOver();
 
         }

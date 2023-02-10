@@ -17,6 +17,8 @@ public class ThirdwebSDKDemos : MonoBehaviour
     public GameObject walletInfoContainer;
 
     public GameObject playButton;
+    public GameObject claimButton;
+
 
     public GameObject LoadingText;
 
@@ -43,6 +45,8 @@ public class ThirdwebSDKDemos : MonoBehaviour
         connectButtonsContainer.SetActive(true);
         walletInfoContainer.SetActive(false);
         playButton.SetActive(false);
+        claimButton.SetActive(false);
+
         LoadingText.SetActive(false);
        
     }
@@ -97,8 +101,7 @@ public class ThirdwebSDKDemos : MonoBehaviour
         dateText.text = "Due date: ...";
 
         playButton.SetActive(false);
-       
-
+        claimButton.SetActive(false);
 
     }
 
@@ -118,6 +121,8 @@ public class ThirdwebSDKDemos : MonoBehaviour
 
             FetchData();
             playButton.SetActive(true);
+            claimButton.SetActive(true);
+
 
         }
         catch (System.Exception e)
@@ -249,8 +254,8 @@ public class ThirdwebSDKDemos : MonoBehaviour
 
         try
         {
-            //var balance = await contract.Read<string>("getBalance");
-            var balance = "1000000000000000000";
+            var balance = await contract.Read<string>("getBalance");
+            //var balance = "1000000000000000000";
 
             var formatedBalance = FormatEthereumBalance(balance);
             bountyText.text = "Bounty: " + formatedBalance + " ETH";
