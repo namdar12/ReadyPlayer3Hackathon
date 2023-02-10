@@ -20,7 +20,7 @@ public class Target : MonoBehaviour
     private float xRange = 4;
     private float ySpawnPos = -6;
 
-    private int lossCounter = 0;
+    //private int lossCounter = 0;
 
     public int pointValue;
     public ParticleSystem explosionParticle;
@@ -55,15 +55,16 @@ public class Target : MonoBehaviour
         Instantiate(explosionParticle,transform.position,explosionParticle.transform.rotation);
     }
 
-    private void OnTriggerEnter(Collider other){
-        if(!gameObject.CompareTag("Bad1")){
-            lossCounter +=1;
-            if(lossCounter == 3){
-                gameManager.GameOver();
+    // private void OnTriggerEnter(Collider other){
+    //     if(!gameObject.CompareTag("Bad1")){
+    //         lossCounter +=1;
+    //          Debug.Log("Loss counter is: " + lossCounter);
+    //         if(lossCounter == 3){
+    //             gameManager.GameOver();
 
-            }
-        }
-    }
+    //         }
+    //     }
+    // }
 
 
 

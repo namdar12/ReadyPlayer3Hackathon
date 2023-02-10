@@ -13,12 +13,13 @@ public class GameManager : MonoBehaviour
 
 
     public List<GameObject> targets;
-    private float SpawnRate = 1;
+    public float SpawnRate = 1.0f;
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI gameOverText;
     
     public int score = 0;
     public int pointValue;
+    public int lossCounter;
     private ThirdwebSDKDemos thirdwebSDKDemos;
 
 
@@ -55,8 +56,8 @@ public class GameManager : MonoBehaviour
             Instantiate(targets[index]);
             //UpdateScore(pointValue);
         }
-       MetamaskLogin();
-       UpdateScoreContract();
+    MetamaskLogin();
+    //    UpdateScoreContract();
 
     }
 
@@ -65,8 +66,19 @@ public class GameManager : MonoBehaviour
 
 
     public void UpdateScore(int scoreToAdd){
+
         score += scoreToAdd;
         scoreText.text = "Score: " + score;
+        SpawnRate = SpawnRate - (float)score/10000;
+        Debug.Log("SpawnRate is: " + SpawnRate);
+
+        if (scoreToAdd == -5){
+            lossCounter +=1;
+        }
+        if (lossCounter == 3){
+            GameOver();
+
+        }
 
     }
 
