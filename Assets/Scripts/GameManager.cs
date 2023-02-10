@@ -69,7 +69,11 @@ public class GameManager : MonoBehaviour
 
         score += scoreToAdd;
         scoreText.text = "Score: " + score;
-        SpawnRate = SpawnRate - (float)score/10000;
+
+        if (SpawnRate >= 0.2){
+             SpawnRate = SpawnRate - (float)score/10000;
+        }
+       
         Debug.Log("SpawnRate is: " + SpawnRate);
 
         if (scoreToAdd == -5){
