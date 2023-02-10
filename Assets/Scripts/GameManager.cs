@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
 
 
     public List<GameObject> targets;
-    public float SpawnRate = 1.0f;
+    public float SpawnRate = 0.7f;
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI gameOverText;
     
@@ -21,7 +21,9 @@ public class GameManager : MonoBehaviour
     public int pointValue;
     public int lossCounter;
     private ThirdwebSDKDemos thirdwebSDKDemos;
-
+    
+    private float time = 60.0f;
+    public TextMeshProUGUI timeText;
 
     private string deployedAt = "0x59511449De070F45C4154659eF5513A81190c090";
     
@@ -41,6 +43,8 @@ public class GameManager : MonoBehaviour
         StartCoroutine(SpawnTarget());
         UpdateScore(score);
         thirdwebSDKDemos = GameObject.Find("Thirdweb").GetComponent<ThirdwebSDKDemos>();
+        //Invoke("OnTimerExpired", time);
+        InvokeRepeating("UpdateTime", 0.0f, 1.0f);
     }
 
     // Update is called once per frame
@@ -61,17 +65,30 @@ public class GameManager : MonoBehaviour
 
     }
 
+    // void OnTimerExpired()
+    // {
+    //     Debug.Log("Timer expired!");
+    //     GameOver();
 
+    // }
+
+    void UpdateTime()
+    {
+        time -= 1.0f;
+        timeText.text = "Time: " + time.ToString();
+        if (time == 0){
+            CancelInvoke("UpdateTime");
+            GameOver();
+        }
+    }
         
-
-
     public void UpdateScore(int scoreToAdd){
 
         score += scoreToAdd;
         scoreText.text = "Score: " + score;
 
         if (SpawnRate >= 0.2){
-             SpawnRate = SpawnRate - (float)score/10000;
+             SpawnRate = SpawnRate - (float)score/1000;
         }
        
         Debug.Log("SpawnRate is: " + SpawnRate);
