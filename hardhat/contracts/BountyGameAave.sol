@@ -32,7 +32,8 @@ contract BountyGameAave {
 
     //Game Variables:
     address public winner;
-    uint256 public deadline = block.timestamp + 1 minutes;  
+    //uint256 public deadline = block.timestamp + 1 minutes;  
+    uint256 public deadline = block.timestamp + 5 days;  
     mapping(address => bool) public isPlayer;
     mapping(address => uint256) public scores;
 
