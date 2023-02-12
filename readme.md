@@ -2,7 +2,7 @@
 
 This is a online game built with Unity and thirdweb Unity SDK. 
 
-##Game Rules
+## Game Rules
 A player signs into the game using a MetaMask wallet and deposits 0.1 ETH into the game's pool. Once the deposit is made, the game begins. 
 The player must click on objects that fly onto the screen. There are four distinct objects: a ball, a box, a barrel, and a skull. The ball, box, 
 and barrel are worth 5 points each, while the skull is worth -5 points. If a player clicks on the skull three times,they automatically lose the game. 
