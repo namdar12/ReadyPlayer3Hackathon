@@ -21,7 +21,7 @@ Choose Thirdweb under WebGL Template. Click on Other Settings, and uncheck Auto 
 
 ## Tech-Stack
 
-We used Unity to build the actual game. We used the thirdweb Unity SDK to create our contract, and connect it to our game. 
+We used Unity to build the actual game. We used the thirdweb Unity SDK to create our contract, and connect it to our game. We used Scenario.gg to generate the game background.
 
 ## Future Plans
 
@@ -29,3 +29,4 @@ We want to add other wallet connections, so users can decide which wallet they w
 The winners can get a soul bound NFT with their high score.
 Add different levels to the game.
 Have users create their own mini bounites that they can shar with their friends. 
+Have the background change each time a player plays. 
