@@ -16,8 +16,12 @@ public class GameManager : MonoBehaviour
     public float SpawnRate = 0.7f;
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI gameOverText;
+    public TextMeshProUGUI livesText;
+
     
     public int score = 0;
+    public int lives = 3;
+
     public int pointValue;
     public int lossCounter;
     private ThirdwebSDKDemos thirdwebSDKDemos;
@@ -95,6 +99,9 @@ public class GameManager : MonoBehaviour
 
         if (scoreToAdd == -5){
             lossCounter +=1;
+            lives -= 1;
+            livesText.text = "Lives: " + lives;
+
         }
         if (lossCounter == 3){
             CancelInvoke("UpdateTime");

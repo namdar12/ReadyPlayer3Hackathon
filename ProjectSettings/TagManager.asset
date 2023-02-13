@@ -6,11 +6,12 @@ TagManager:
   tags:
   - Undefined
   - Bad1
+  - thirdweb
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Background
   - Water
   - UI
   - 
@@ -42,4 +43,10 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: New Layer 1
+    uniqueID: 3163163455
+    locked: 0
+  - name: Background
+    uniqueID: 3542747697
     locked: 0
